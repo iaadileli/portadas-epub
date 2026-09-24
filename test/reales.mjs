@@ -33,7 +33,7 @@ const ctx = await navegador.newContext({ acceptDownloads: true });
 const pagina = await ctx.newPage();
 const consola = [];
 pagina.on("pageerror", e => consola.push(e.message));
-await pagina.goto(`http://localhost:${PUERTO}/`);
+await pagina.goto(process.env.URL || `http://localhost:${PUERTO}/`);
 
 const filas = [];
 for (const [n, ruta] of lista.entries()) {

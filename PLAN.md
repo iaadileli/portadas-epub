@@ -27,7 +27,7 @@ Idea de Adil (24-sep-2026): «no me gusta cuando un EPUB tiene una portada feís
 
 ## Estado
 
-- [x] v1.0: núcleo, pantalla, PWA, pruebas de laboratorio y con los EPUB reales del Mac.
+- [x] v1.0 (24-sep-2026): núcleo, pantalla, PWA. Laboratorio 5/5 + 139/139 EPUB reales del Mac sin errores nuevos de epubcheck + prueba en la web desplegada.
 - [ ] Adil la prueba en el iPhone con un libro de verdad.
 
 ## Ideas (solo si Adil las pide)
