@@ -27,7 +27,8 @@ function relativa(desdeDir, ruta) {
 }
 
 function parsear(texto, tipo = "application/xml") {
-  const doc = new DOMParser().parseFromString(texto, tipo);
+  // Algunos EPUB llevan BOM delante de <?xml; los lectores lo toleran y DOMParser no.
+  const doc = new DOMParser().parseFromString(texto.replace(/^﻿/, ""), tipo);
   if (doc.getElementsByTagName("parsererror").length) throw new Error("XML mal formado");
   return doc;
 }

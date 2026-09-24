@@ -10,10 +10,10 @@ import { dirname, join, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SALIDA = join(RAIZ, "test", "salida", "reales");
+const SALIDA = join(RAIZ, "test", "salida", process.env.CARPETA || "reales");
 const EPUBCHECK = join(RAIZ, "test", "herramientas", "epubcheck-4.2.6", "epubcheck.jar");
 const IMG = join(RAIZ, "test", "salida", "lab", "nueva-apaisada.jpg"); // la genera probar.mjs (1200×800)
-const PUERTO = 8767;
+const PUERTO = Number(process.env.PUERTO || 8767);
 mkdirSync(SALIDA, { recursive: true });
 const lista = readFileSync(process.argv[2], "utf8").split("\n").filter(Boolean);
 
