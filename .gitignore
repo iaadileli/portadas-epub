@@ -1,0 +1,4 @@
+node_modules/
+test/salida/
+test/herramientas/
+.DS_Store

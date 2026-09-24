@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portadas EPUB</title>
+<meta name="description" content="Cambia la portada de un EPUB desde el móvil">
+<meta name="theme-color" content="#f4ece0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Portadas">
+<style>
+  :root {
+    --fondo: #f6efe3; --papel: #fffdf8; --tinta: #2c2a26; --suave: #6f675c;
+    --linea: #e2d7c5; --acento: #b4462e; --ok: #2f6b3f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --fondo: #1d1b18; --papel: #282520; --tinta: #efe8dc; --suave: #a89f92; --linea: #3d3830; --acento: #e2765c; --ok: #7cc28f; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--fondo); color: var(--tinta);
+    font: 17px/1.45 -apple-system, system-ui, "Segoe UI", sans-serif;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+  main { max-width: 560px; margin: 0 auto; }
+  h1 { font: 700 28px/1.2 Georgia, "Times New Roman", serif; margin: 8px 0 4px; }
+  .sub { color: var(--suave); margin: 0 0 20px; font-size: 15px; }
+  .paso { background: var(--papel); border: 1px solid var(--linea); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .paso h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--suave); margin: 0 0 10px; }
+  .boton {
+    display: block; width: 100%; text-align: center; font: inherit; font-weight: 650;
+    padding: 14px; border-radius: 10px; border: 1.5px solid var(--tinta); background: transparent; color: var(--tinta); cursor: pointer;
+  }
+  .boton.principal { background: var(--acento); border-color: var(--acento); color: #fff; }
+  .boton:disabled { opacity: .4; cursor: default; }
+  .boton + .boton { margin-top: 10px; }
+  input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .fila { display: flex; gap: 14px; align-items: center; margin-top: 14px; }
+  .fila:empty { display: none; }
+  .mini { width: 84px; aspect-ratio: 2/3; object-fit: contain; border-radius: 4px; background: var(--linea); box-shadow: 0 2px 8px rgba(0,0,0,.18); flex: none; }
+  .mini.vacia { display: grid; place-items: center; font-size: 12px; color: var(--suave); text-align: center; padding: 6px; }
+  .datos { min-width: 0; font-size: 15px; }
+  .datos b { display: block; font-size: 16px; overflow-wrap: anywhere; }
+  .datos span { color: var(--suave); }
+  .aviso { font-size: 14px; color: var(--suave); margin: 10px 0 0; }
+  .error { color: var(--acento); font-weight: 600; }
+  label.opcion { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; font-size: 15px; }
+  label.opcion input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--acento); }
+  .comparar { display: flex; gap: 16px; justify-content: center; align-items: flex-end; margin: 6px 0 14px; }
+  .comparar figure { margin: 0; text-align: center; font-size: 13px; color: var(--suave); }
+  .comparar img, .comparar .mini { width: 110px; }
+  .comparar img { aspect-ratio: auto; height: auto; object-fit: contain; }
+  .listo { color: var(--ok); font-weight: 700; margin: 0 0 12px; text-align: center; }
+  [hidden] { display: none !important; }
+  footer { text-align: center; color: var(--suave); font-size: 13px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Portadas EPUB</h1>
+  <p class="sub">Cambia la portada de un libro. Todo se hace en el móvil: el libro no se sube a ningún sitio.</p>
+
+  <section class="paso">
+    <h2>1 · El libro</h2>
+    <label class="boton" for="f-epub" id="b-epub">Elegir EPUB</label>
+    <input type="file" id="f-epub">
+    <div class="fila" id="info-epub"></div>
+    <p class="aviso error" id="err-epub" hidden></p>
+  </section>
+
+  <section class="paso">
+    <h2>2 · La portada nueva</h2>
+    <label class="boton" for="f-img" id="b-img">Elegir imagen</label>
+    <input type="file" id="f-img" accept="image/*">
+    <div class="fila" id="info-img"></div>
+    <label class="opcion"><input type="checkbox" id="recortar"> <span>Recortar a forma de libro (2:3). Útil si la imagen es una foto o una captura.</span></label>
+    <p class="aviso error" id="err-img" hidden></p>
+  </section>
+
+  <section class="paso">
+    <h2>3 · Listo</h2>
+    <button class="boton principal" id="b-cambiar" disabled>Cambiar portada</button>
+    <div id="resultado" hidden>
+      <p class="listo" style="margin-top:16px">✓ Portada cambiada</p>
+      <div class="comparar">
+        <figure><div id="antes"></div><figcaption>Antes</figcaption></figure>
+        <figure><img id="despues" alt="Portada nueva"><figcaption>Ahora</figcaption></figure>
+      </div>
+      <button class="boton principal" id="b-compartir" hidden>Abrir en… (Libros, etc.)</button>
+      <button class="boton" id="b-descargar">Guardar en Archivos</button>
+      <p class="aviso">En Libros de Apple, borra antes el libro viejo; si no, puede seguir enseñando la portada antigua.</p>
+    </div>
+    <p class="aviso error" id="err-final" hidden></p>
+  </section>
+
+  <footer id="version"></footer>
+</main>
+<script src="vendor/jszip.min.js"></script>
+<script type="module" src="app.js"></script>
+<script type="module" src="pwa.js"></script>
+</body>
+</html>
